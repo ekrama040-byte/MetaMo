@@ -1,4 +1,3 @@
-
 (: TransitionResult Type)
 (: transitionResult (-> ActionType MotivationalState TransitionResult))
 
@@ -25,12 +24,6 @@
 ;; Example: (bestCandidateScore (bestCandidateResult 0.85 MOVE)) -> 0.85
 (= (bestCandidateScore (bestCandidateResult $score $action))
     $score
-)
-
-;; Extract the optimal action from a BestCandidateResult.
-;; Example: (bestCandidateAction (bestCandidateResult 0.85 MOVE)) -> MOVE
-(= (bestCandidateAction (bestCandidateResult $score $action))
-    $action
 )
 
 ;; Extract the appraisal comonad from a MetaMoPseudoBimonad.
@@ -186,9 +179,10 @@
     (let* (
         ($contextA (decisionContext $bimonad $stateA $stimulus))
         ($contextB (decisionContext $bimonad $stateB $stimulus))
-        ($bestResult (bestCandidate $contextA $contextB $candidates $bimonad))
+        ($bestCandidateAction (|-> ((bestCandidateResult $score $action)) $action))
+        ($bestResult (bestCandidate $bimonad $contextA $contextB $candidates))
     )
-        (bestCandidateAction $bestResult)
+        ($bestCandidateAction $bestResult)
     )
 )
 
