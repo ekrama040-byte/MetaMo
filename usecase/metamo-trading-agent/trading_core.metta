@@ -129,7 +129,10 @@
 ;; same role as the text perception in the research assistant.
 ;; Example: (marketStimulus 0.05 True 0.3)
 (= (marketStimulus $return $holding $turbulence)
-    (let $marketNovelty (|-> ($return) (npClip (* (absNumber $return) (NOVELTY_GAIN)) 0.0 1.0))
+    (let $marketNovelty 
+        (|-> ($return) 
+            (npClip (* (absNumber $return) (NOVELTY_GAIN)) 0.0 1.0)
+        )
         (openPsiStimulus
             ($marketNovelty $return)
             (marketConduciveness $return $holding $turbulence)
@@ -138,6 +141,7 @@
         )
     )
 )
+
 ;; Part 3. The trade actions offered to the framework
 
 ;; The goal correlations use the framework's 8-goal layout. In the MAGUS

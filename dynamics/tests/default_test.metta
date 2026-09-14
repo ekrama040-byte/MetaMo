@@ -41,10 +41,23 @@
 
 (= (defCandidates)
     (let* (
-        ($defcandidateA (|-> () (action MOVE (0.3 0.1 0.5 0.2 0.0 -0.1 0.4 0.1) 0.1 (0.02 0.01 0.03 0.01 0.01 0.01 0.02 0.01))))
-        ($defcandidateB (|-> () (action STAY (0.1 0.0 0.2 0.1 0.1  0.2 0.1 0.3) 0.05 (0.01 0.00 0.01 0.01 0.02 0.01 0.01 0.01))))
+        ($candidateA (|-> () 
+            (action MOVE 
+                (0.3 0.1 0.5 0.2 0.0 -0.1 0.4 0.1) 
+                0.1 
+                (0.02 0.01 0.03 0.01 0.01 0.01 0.02 0.01)
+            )
+        ))
+
+        ($candidateB (|-> () 
+            (action STAY 
+                (0.1 0.0 0.2 0.1 0.1 0.2 0.1 0.3) 
+                0.05 
+                (0.01 0.00 0.01 0.01 0.02 0.01 0.01 0.01)
+            )
+        ))
     )
-        (($defcandidateA) ($defcandidateB))
+        ( ($candidateA) ($candidateB) )
     )
 )
 
@@ -89,16 +102,24 @@
 ;; Modulators at 0.0 clip up to ETA_BOUNDARY = 0.1
 !(test
     (let $defzeroModState 
-         ((|-> () (motivation (0.5 0.4 0.6 0.5 0.5 0.5 0.6 0.4) (0.0 0.0 0.0 0.0 0.0 0.0))))
-         (motivationModulators (defaultBoundaryStabilize $defzeroModState)))
+        (motivation 
+            (0.5 0.4 0.6 0.5 0.5 0.5 0.6 0.4) 
+            (0.0 0.0 0.0 0.0 0.0 0.0)
+        )
+        (motivationModulators (defaultBoundaryStabilize $defzeroModState))
+    )
     (0.1 0.1 0.1 0.1 0.1 0.1)
 )
 
 ;; Modulators at 1.0 clip down to 1 - ETA_BOUNDARY = 0.9
 !(test
     (let $defMaxModState 
-         ((|-> () (motivation (0.5 0.4 0.6 0.5 0.5 0.5 0.6 0.4) (1.0 1.0 1.0 1.0 1.0 1.0))))
-         (motivationModulators (defaultBoundaryStabilize $defMaxModState)))
+        (motivation 
+            (0.5 0.4 0.6 0.5 0.5 0.5 0.6 0.4) 
+            (1.0 1.0 1.0 1.0 1.0 1.0)
+        )
+        (motivationModulators (defaultBoundaryStabilize $defMaxModState))
+    )
     (0.9 0.9 0.9 0.9 0.9 0.9)
 )
 ;; defaultProject  
@@ -136,11 +157,15 @@
     True
 )
 
-;; gInd = 0.2 → below THETA_SAFE = 0.3
+;; gInd = 0.2 -> below THETA_SAFE = 0.3
 !(test
     (let $defunsafeState 
-         ((|-> () (motivation (0.2 0.4 0.6 0.5 0.5 0.5 0.6 0.4) (0.5 0.5 0.5 0.5 0.5 0.5))))
-         (defaultSafeRegionCheck $defunsafeState))
+        (motivation 
+            (0.2 0.4 0.6 0.5 0.5 0.5 0.6 0.4) 
+            (0.5 0.5 0.5 0.5 0.5 0.5)
+        )
+        (defaultSafeRegionCheck $defunsafeState)
+    )
     False
 )
 
@@ -166,11 +191,17 @@
 ;; Small perturbation (0.01 on one goal) — nearby trajectories should stay close
 !(test
     (let $defNearbyState 
-         ((|-> () (motivation (0.51 0.4 0.6 0.5 0.5 0.5 0.6 0.4) (0.5 0.5 0.5 0.5 0.5 0.5))))
-         (defaultContractiveCheck
-             (defaultMetaMo)
-             (defTestState) $defNearbyState
-             (defStimulus) (defCandidates)
-         ))
+        (motivation 
+            (0.51 0.4 0.6 0.5 0.5 0.5 0.6 0.4) 
+            (0.5 0.5 0.5 0.5 0.5 0.5)
+        )
+        (defaultContractiveCheck
+            (defaultMetaMo)
+            (defTestState)
+            $defNearbyState
+            (defStimulus)
+            (defCandidates)
+        )
+    )
     True
 )

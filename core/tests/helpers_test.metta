@@ -1,7 +1,6 @@
 !(import! &self ../helper)
 !(import! &self "../helpers.py")
 
-
 !(test (listDifference (7 6 13) (4 5 6)) (3.0 1.0 7.0))
 !(test (listDifference () ()) ())
 

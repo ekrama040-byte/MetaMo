@@ -6,7 +6,7 @@
 
 (: MetaMoPseudoBimonad Type)
 (: metaMoPseudoBimonad
-   (-> AppraisalComonad DecisionMonad Symbol Symbol Symbol Symbol Symbol MetaMoPseudoBimonad))
+  (-> AppraisalComonad DecisionMonad Symbol Symbol Symbol Symbol Symbol MetaMoPseudoBimonad))
 
 ;; Extract the action from a TransitionResult.
 ;; Example: (transitionAction (transitionResult MOVE (motivation g m))) -> MOVE
@@ -26,11 +26,18 @@
     $score
 )
 
+;; Extract the optimal action from a BestCandidateResult.
+;; Example: (bestCandidateAction (bestCandidateResult 0.85 MOVE)) -> MOVE
+(= (bestCandidateAction (bestCandidateResult $score $action))
+    $action
+)
+
 ;; Extract the appraisal comonad from a MetaMoPseudoBimonad.
 ;; Example: (bimonadAppraisal myBimonad)
 (= (bimonadAppraisal (metaMoPseudoBimonad $appraisal $decision $dampingFn $boundaryFn $projectFn $contractiveFn $safeFn))
     $appraisal
 )
+
 
 ;; Extract the decision monad from a MetaMoPseudoBimonad.
 ;; Example: (bimonadDecision myBimonad)
@@ -179,10 +186,9 @@
     (let* (
         ($contextA (decisionContext $bimonad $stateA $stimulus))
         ($contextB (decisionContext $bimonad $stateB $stimulus))
-        ($bestCandidateAction (|-> ((bestCandidateResult $score $action)) $action))
-        ($bestResult (bestCandidate $bimonad $contextA $contextB $candidates))
+        ($bestResult (bestCandidate $contextA $contextB $candidates $bimonad))
     )
-        ($bestCandidateAction $bestResult)
+        (bestCandidateAction $bestResult)
     )
 )
 

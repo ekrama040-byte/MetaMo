@@ -141,11 +141,11 @@
 (= (qwestorActionWithAntiGoals $space (action $id $goalCorrelations $riskEstimate $deltaG))
   (let*
     (  
-      ($getAntiGoalValues (|-> ($s) (
-        (getAntiGoal $s hallucinate)
-        (getAntiGoal $s redundant)
-        (getAntiGoal $s rabbit_hole)
-        (getAntiGoal $s premature)
+      ($getAntiGoalValues (|-> ($space) (
+        (getAntiGoal $space hallucinate)
+        (getAntiGoal $space redundant)
+        (getAntiGoal $space rabbit_hole)
+        (getAntiGoal $space premature)
     )))
       ($anti-values ($getAntiGoalValues $space))
       ($exposure (match &self (QwestorAntiGoalExposure $id $values) $values))

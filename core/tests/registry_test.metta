@@ -33,8 +33,15 @@
 )
 
 (= (regCandidates) 
-    (let $regCandidateB (|-> () (action STAY (0.1 0.0 0.2 0.1 0.1 0.2 0.1 0.3) 0.05 (0.01 0.00 0.01 0.01 0.02 0.01 0.01 0.01)))
-      ((regCandidateA) ($regCandidateB))
+    (let $regCandidateB 
+        (|-> () 
+            (action STAY 
+                (0.1 0.0 0.2 0.1 0.1 0.2 0.1 0.3) 
+                0.05 
+                (0.01 0.00 0.01 0.01 0.02 0.01 0.01 0.01)
+            )
+        )
+        ( (regCandidateA) ($regCandidateB) )
     )
 )
 
@@ -130,18 +137,23 @@
 )
 
 
-;;  module swap: custom decision wired at call-site  
+;; module swap: custom decision wired at call-site
 (= (regFirstDecision)
     (let* (
-        ($regFirstUnit   (|-> ($state) $state))
+        ($regFirstUnit   (|-> ($state) 
+                             $state))
+
         ($regFirstDecide (|-> ($state $candidates)
-                     (let* ((($head $rest) (decons $candidates)))
-                       (decisionResult $head (actionDeltaG $head)))))
-        ($regFirstScore  (|-> ($state $candidate) 1.0))
+                             (let* ((($head $rest) (decons $candidates)))
+                                 (decisionResult $head (actionDeltaG $head)))))
+
+        ($regFirstScore  (|-> ($state $candidate) 
+                             1.0))
     )
         (decisionMonad $regFirstUnit $regFirstDecide $regFirstScore)
     )
 )
+
 (= (regSwappedBimonad)
     (metaMoPseudoBimonad
         (eval (openPsiAppraisal))
